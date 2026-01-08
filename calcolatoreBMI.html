@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalcolatoreBMI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: bisque;
+        }
+        
+        #risultato {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .sottopeso {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .normale {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .sovrappeso {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .obeso {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calcolatore BMI</h1>
+    <p>Inserisci i tuoi dati qui sotto</p>
+
+    <form id="bmiForm">
+        <label for="peso">Il tuo peso è (kg):</label> <br>
+        <input type="number" name="peso" id="peso" step="0.1" required> <br><br>
+
+        <label for="altezza">La tua altezza è (cm):</label> <br>
+        <input type="number" name="altezza" id="altezza" step="0.1" required> <br><br>
+
+        <button type="submit">Calcola</button>
+    </form>
+
+    <div id="risultato"></div>
+
+    <script>
+        document.getElementById('bmiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const peso = parseFloat(document.getElementById('peso').value);
+            const altezzaCm = parseFloat(document.getElementById('altezza').value);
+            const altezzaM = altezzaCm / 100; 
+            
+            const bmi = peso / (altezzaM * altezzaM);
+            
+            let messaggio = '';
+            let classe = '';
+            
+            if (bmi < 18.5) {
+                messaggio = `Il tuo BMI è ${bmi.toFixed(1)} - Sei in sottopeso`;
+                classe = 'sottopeso';
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                messaggio = `Il tuo BMI è ${bmi.toFixed(1)} - Sei nella norma`;
+                classe = 'normale';
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                messaggio = `Il tuo BMI è ${bmi.toFixed(1)} - Sei in sovrappeso`;
+                classe = 'sovrappeso';
+            } else {
+                messaggio = `Il tuo BMI è ${bmi.toFixed(1)} - Sei obeso`;
+                classe = 'obeso';
+            }
+            
+            const risultatoDiv = document.getElementById('risultato');
+            risultatoDiv.textContent = messaggio;
+            risultatoDiv.className = classe;
+        });
+    </script>
+    
+</body>
+</html>
