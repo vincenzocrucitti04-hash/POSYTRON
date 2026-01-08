@@ -18,7 +18,7 @@ function verificaParentesi(stringa) {
 }
 
 //Test
-console.log(verificaParentesi("()()"));
+console.log(verificaParentesi("(()())"));
 console.log(verificaParentesi("(()("));
 console.log(verificaParentesi("()"));
 console.log(verificaParentesi("()(("));
