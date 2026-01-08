@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>📝 To-Do List</h1>
+
+    <div class="input-container">
+      <input
+        type="text"
+        id="taskInput"
+        placeholder="Scrivi una nuova task..."
+      />
+      <button id="addButton">Aggiungi</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <script>
+      const taskInput = document.getElementById("taskInput");
+      const addButton = document.getElementById("addButton");
+      const taskList = document.getElementById("taskList");
+
+      function addTask() {
+        const taskText = taskInput.value.trim();
+
+        if (taskText === "") {
+          alert("Per favore, scrivi qualcosa!");
+          return;
+        }
+
+        const li = document.createElement("li");
+        li.className = "task-item";
+
+        const span = document.createElement("span");
+        span.className = "task-text";
+        span.textContent = taskText;
+
+        const buttonContainer = document.createElement("div");
+        buttonContainer.className = "task-buttons";
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Modifica";
+        editBtn.className = "edit-btn";
+        editBtn.onclick = function () {
+          editTask(li, span);
+        };
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Elimina";
+        deleteBtn.className = "delete-btn";
+        deleteBtn.onclick = function () {
+          deleteTask(li);
+        };
+
+        buttonContainer.appendChild(editBtn);
+        buttonContainer.appendChild(deleteBtn);
+        li.appendChild(span);
+        li.appendChild(buttonContainer);
+        taskList.appendChild(li);
+
+        taskInput.value = "";
+      }
+
+      function deleteTask(taskItem) {
+        if (confirm("Sei sicuro di voler eliminare questa task?")) {
+          taskItem.remove();
+        }
+      }
+
+      function editTask(taskItem, textSpan) {
+        const currentText = textSpan.textContent;
+
+        const editInput = document.createElement("input");
+        editInput.type = "text";
+        editInput.className = "edit-input";
+        editInput.value = currentText;
+
+        const buttonContainer = taskItem.querySelector(".task-buttons");
+        const editBtn = buttonContainer.querySelector(".edit-btn");
+        editBtn.textContent = "Salva";
+        editBtn.onclick = function () {
+          saveTask(taskItem, textSpan, editInput);
+        };
+
+        taskItem.classList.add("editing");
+        taskItem.insertBefore(editInput, buttonContainer);
+        editInput.focus();
+
+        editInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            saveTask(taskItem, textSpan, editInput);
+          }
+        });
+      }
+
+      function saveTask(taskItem, textSpan, editInput) {
+        const newText = editInput.value.trim();
+
+        if (newText === "") {
+          alert("La task non può essere vuota!");
+          return;
+        }
+
+        textSpan.textContent = newText;
+
+        editInput.remove();
+
+        taskItem.classList.remove("editing");
+
+        const buttonContainer = taskItem.querySelector(".task-buttons");
+        const editBtn = buttonContainer.querySelector(".edit-btn");
+        editBtn.textContent = "Modifica";
+        editBtn.onclick = function () {
+          editTask(taskItem, textSpan);
+        };
+      }
+
+      addButton.addEventListener("click", addTask);
+
+      taskInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          addTask();
+        }
+      });
+    </script>
+  </body>
+</html>
