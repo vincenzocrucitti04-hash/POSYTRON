@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Turni di Lavoro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .btn-ordina {
+            background-color: #2196F3;
+        }
+        .btn-ordina:hover {
+            background-color: #0b7dda;
+        }
+        .messaggio {
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .errore {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+        .avviso {
+            background-color: #fff3e0;
+            color: #ef6c00;
+            border: 1px solid #ff9800;
+        }
+        .successo {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+        .turni-lista {
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestione Turni di Lavoro</h1>
+        
+        <form id="formTurno">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="giorno">Giorno della settimana:</label>
+                <select id="giorno" required>
+                    <option hidden value="">Seleziona un giorno</option>
+                    <option value="Lunedì">Lunedì</option>
+                    <option value="Martedì">Martedì</option>
+                    <option value="Mercoledì">Mercoledì</option>
+                    <option value="Giovedì">Giovedì</option>
+                    <option value="Venerdì">Venerdì</option>
+                    <option value="Sabato">Sabato</option>
+                    <option value="Domenica">Domenica</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="orario">Orario (es. 9:00-17:00):</label>
+                <input type="text" id="orario" placeholder="9:00-17:00" required>
+            </div>
+            
+            <div id="messaggi"></div>
+            
+            <button type="submit">Aggiungi Turno</button>
+            <button type="button" class="btn-ordina" onclick="ordinaTurni()">Ordina per Orario</button>
+        </form>
+        
+        <div class="turni-lista">
+            <h2>Turni Inseriti</h2>
+            <table id="tabellaTurni">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Giorno</th>
+                        <th>Orario</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabella">
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #999;">Nessun turno inserito</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let turni = [];
+        
+        const giorniSettimana = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+        
+        document.getElementById('formTurno').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nome').value.trim();
+            const giorno = document.getElementById('giorno').value;
+            const orario = document.getElementById('orario').value.trim();
+            
+            const turnoEsistente = turni.find(t => t.giorno === giorno && t.orario === orario);
+            
+            if (turnoEsistente) {
+                mostraMessaggio('Esiste già un turno con lo stesso orario in questo giorno', 'errore');
+                return;
+            }
+            
+            const indiceGiorno = giorniSettimana.indexOf(giorno);
+            let giornoPrec = '';
+            
+            if (indiceGiorno > 0) {
+                giornoPrec = giorniSettimana[indiceGiorno - 1];
+            } else {
+                giornoPrec = giorniSettimana[6];
+            }
+            
+            const turnoPrecedente = turni.find(t => t.giorno === giornoPrec && t.orario === orario);
+            
+            let messaggioAvviso = '';
+            if (turnoPrecedente) {
+                messaggioAvviso = `Attenzione: ${turnoPrecedente.nome} ha lo stesso orario (${orario}) il giorno precedente (${giornoPrec})!`;
+            }
+            
+            turni.push({
+                nome: nome,
+                giorno: giorno,
+                orario: orario
+            });
+            
+            if (messaggioAvviso) {
+                mostraMessaggio('Turno aggiunto con successo!<br>' + messaggioAvviso, 'avviso');
+            } else {
+                mostraMessaggio('Turno aggiunto con successo!', 'successo');
+            }
+            
+            aggiornaTabellaConvenzionale();
+            
+            document.getElementById('formTurno').reset();
+        });
+        
+        function mostraMessaggio(testo, tipo) {
+            const divMessaggi = document.getElementById('messaggi');
+            divMessaggi.innerHTML = `<div class="messaggio ${tipo}">${testo}</div>`;
+            //rimuove i messaggio dopo 5 secondi
+            setTimeout(() => {
+                divMessaggi.innerHTML = '';
+            }, 5000);
+        }
+        
+        function aggiornaTabellaConvenzionale() {
+            const tbody = document.getElementById('corpoTabella');
+            
+            if (turni.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #999;">Nessun turno inserito</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            turni.forEach(turno => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${turno.nome}</td>
+                    <td>${turno.giorno}</td>
+                    <td>${turno.orario}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        function ordinaTurni() {
+            if (turni.length === 0) {
+                mostraMessaggio('Non ci sono turni da ordinare!', 'avviso');
+                return;
+            }
+            
+            turni.sort((a, b) => {
+                const orarioA = a.orario.split('-')[0].trim();
+                const orarioB = b.orario.split('-')[0].trim();
+                
+                const [oraA, minA] = orarioA.split(':').map(Number);
+                const [oraB, minB] = orarioB.split(':').map(Number);
+                
+                if (oraA !== oraB) {
+                    return oraA - oraB;
+                }
+                return minA - minB;
+            });
+            
+            aggiornaTabellaConvenzionale();
+            mostraMessaggio('Turni ordinati per orario!', 'successo');
+        }
+    </script>
+</body>
+</html>
