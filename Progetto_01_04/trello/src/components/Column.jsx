@@ -13,7 +13,8 @@ function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) 
       <h2 style={{
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center" 
+        alignItems: "center",
+        fontFamily:"Playwrite IE"
         }}>
 
         {title}
@@ -39,7 +40,7 @@ function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) 
         />
       ))}
 
-      <button onClick={() => onAdd(status)}>+ Aggiungi</button>
+      <button style={{marginLeft:"1.3rem"}} className="buttonAdd" onClick={() => onAdd(status)}> + Aggiungi Task</button>
     </div>
   );
 }
