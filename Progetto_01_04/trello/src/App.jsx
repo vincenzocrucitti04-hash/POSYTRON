@@ -61,15 +61,7 @@ const moveTask = (taskId, fromColumn, toColumn) => {
       width: "100%"
     }}
     className="app-container">
-
-      <div style={{
-        padding:"20px",
-        background:"white",
-        marginBottom:"2rem",
-        borderRadius:"3rem"
-      }}>
-        <h1>My Trello Board</h1>
-        </div>
+      <h1>My Trello Board</h1>
       <Board board={board} onAdd={addTask} onDelete={deleteTask} onMove={moveTask} />
     </div>
   );
