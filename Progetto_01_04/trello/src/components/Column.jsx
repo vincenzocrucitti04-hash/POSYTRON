@@ -10,7 +10,24 @@ function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) 
       borderRadius: "10px" 
       }}>
 
-      <h2>{title} ({tasks.length})</h2>
+      <h2 style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center" 
+        }}>
+
+        {title}
+        
+        <span style={{ 
+          fontSize: "14px", 
+          background: "#ddd", 
+          padding: "2px 8px", 
+          borderRadius: "10px",
+          color: "#666" 
+        }}>
+          {tasks.length}
+        </span>
+      </h2>
 
       {tasks.map(task => (
         <Card 
@@ -26,3 +43,5 @@ function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) 
     </div>
   );
 }
+
+export default Column;
