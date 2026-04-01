@@ -1,6 +1,6 @@
 import Card from "./Card";
 
-function Column({ title, tasks, id, onAdd, onDelete }) {
+function Column({ title, tasks, id, onAdd, onDelete, onMove }) {
   return (
     <div style={{
         background: "#f4f4f4",
@@ -13,8 +13,10 @@ function Column({ title, tasks, id, onAdd, onDelete }) {
       {tasks.map(task => (
         <Card 
           key={task.id} 
-          task={task} 
-          onDelete={() => onDelete(id, task.id)} 
+          task={task}
+          columnId={id}
+          onDelete={() => onDelete(id, task.id)}
+          onMove={onMove} 
         />
       ))}
 
