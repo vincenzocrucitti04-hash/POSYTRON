@@ -1,4 +1,4 @@
-function Card({ task, onDelete }) {
+function Card({ task, columnId, onDelete, onMove }) {
   return (
     <div style={{
       background: "white",
