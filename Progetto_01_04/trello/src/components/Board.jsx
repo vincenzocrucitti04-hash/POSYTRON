@@ -2,7 +2,12 @@ import Column from "./Column";
 
 function Board({ tasks, columns, onAdd, onDelete, onMove }) {
   return (
-    <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
+    <div style={{ 
+      display: "flex",
+      gap: "20px",
+      justifyContent: "center" 
+      }}>
+        
       {columns.map(colStatus => (
         <Column 
           key={colStatus}
