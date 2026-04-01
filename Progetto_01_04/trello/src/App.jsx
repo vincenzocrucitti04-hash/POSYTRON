@@ -39,21 +39,38 @@ function App() {
     });
   };
 
+const moveTask = (taskId, fromColumn, toColumn) => {
+  if (fromColumn === toColumn) return;
+
+  const taskToMove = board[fromColumn].find(t => t.id === taskId);
+
+  setBoard({
+    ...board,
+    [fromColumn]: board[fromColumn].filter(t => t.id !== taskId),
+    [toColumn]: [...board[toColumn], taskToMove]
+  });
+};
+
+
   return (
     <div style={{
       display: "flex",           
       flexDirection: "column",    
       alignItems: "center",      
       justifyContent: "center",
-      width: "100%"}}
+      width: "100%"
+    }}
     className="app-container">
+
       <div style={{
         padding:"20px",
         background:"white",
         marginBottom:"2rem",
         borderRadius:"3rem"
-      }}><h1>My Trello Board</h1></div>
-      <Board board={board} onAdd={addTask} onDelete={deleteTask} />
+      }}>
+        <h1>My Trello Board</h1>
+        </div>
+      <Board board={board} onAdd={addTask} onDelete={deleteTask} onMove={moveTask} />
     </div>
   );
 }
