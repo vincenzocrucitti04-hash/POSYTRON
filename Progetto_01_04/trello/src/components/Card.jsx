@@ -19,7 +19,8 @@ function Card({ task, onDelete }) {
             border: "none", 
             cursor: "pointer", 
             padding: "2px 6px", 
-            borderRadius: "3px" }}
+            borderRadius: "3px" 
+          }}
       >
         X
       </button>

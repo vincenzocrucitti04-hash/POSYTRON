@@ -13,7 +13,7 @@ function App() {
       { id: 4, text: "Creare un design per la pagina" }
     ],
     done: [
-      { id: 5, text: "Fissare apuntamento con Dottore" },
+      { id: 5, text: "Fissare appuntamento Dottore" },
       { id: 6, text: "Fare abbonamento parcheggio"}
     ]
   });
@@ -47,7 +47,12 @@ function App() {
       justifyContent: "center",
       width: "100%"}}
     className="app-container">
-      <h1>My Trello Board</h1>
+      <div style={{
+        padding:"20px",
+        background:"white",
+        marginBottom:"2rem",
+        borderRadius:"3rem"
+      }}><h1>My Trello Board</h1></div>
       <Board board={board} onAdd={addTask} onDelete={deleteTask} />
     </div>
   );

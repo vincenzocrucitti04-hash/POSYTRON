@@ -4,7 +4,7 @@ function Column({ title, tasks, id, onAdd, onDelete }) {
   return (
     <div style={{
         background: "#f4f4f4",
-        padding: "10px",
+        padding: "30px",
         width: "250px",
         borderRadius: "10px"
     }}>
@@ -18,8 +18,14 @@ function Column({ title, tasks, id, onAdd, onDelete }) {
         />
       ))}
 
-      <button onClick={() => onAdd(id)} style={{ width: "100%", marginTop: "10px", cursor: "pointer" }}>
-        + Aggiungi Task
+      <button className="buttonAdd"
+      onClick={() => onAdd(id)} 
+      style={{
+        width: "100%", 
+        marginTop: "20px", 
+        cursor: "pointer"
+        }}>
+        Aggiungi Task ( + )
       </button>
     </div>
   );
