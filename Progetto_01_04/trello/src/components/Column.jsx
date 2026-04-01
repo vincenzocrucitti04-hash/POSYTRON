@@ -5,9 +5,9 @@ function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) 
     <div className="column" 
     style={{ 
       background: "#f4f4f4",
-      padding: "10px",
+      padding: "20px",
       width: "250px",
-      borderRadius: "10px" 
+      borderRadius: "10px"
       }}>
 
       <h2 style={{
@@ -40,7 +40,7 @@ function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) 
         />
       ))}
 
-      <button style={{marginLeft:"1.3rem"}} className="buttonAdd" onClick={() => onAdd(status)}> + Aggiungi Task</button>
+      <button style={{marginLeft:"1.3rem",marginTop:"10px"}} className="buttonAdd" onClick={() => onAdd(status)}> + Aggiungi Task</button>
     </div>
   );
 }
