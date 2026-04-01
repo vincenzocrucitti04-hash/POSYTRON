@@ -14,7 +14,7 @@ function Card({ task, onMove, onDelete, allStatuses }) {
         }}>
 
         <span>{task.text}</span>
-        
+
         <button onClick={onDelete} style={{ background: "red", color: "white" }}>X</button>
       </div>
 
@@ -30,3 +30,5 @@ function Card({ task, onMove, onDelete, allStatuses }) {
     </div>
   );
 }
+
+export default Card;
