@@ -3,52 +3,35 @@ import './App.css';
 import Board from './components/Board';
 
 function App() {
-  const [board, setBoard] = useState({
-    todo: [
-      { id: 1, text: "Andare a fare la spesa" },
-      { id: 2, text: "Comprare mobile cucina" }
-    ],
-    progress: [
-      { id: 3, text: "Sviluppare Progetto Trello" },
-      { id: 4, text: "Creare un design per la pagina" }
-    ],
-    done: [
-      { id: 5, text: "Fissare appuntamento Dottore" },
-      { id: 6, text: "Fare abbonamento parcheggio"}
-    ]
-  });
+  const [tasks, setTasks] = useState([
+      { id: 1, text: "Andare a fare la spesa", status: "todo" },
+      { id: 2, text: "Comprare mobile cucina", status: "todo" },
+      { id: 3, text: "Sviluppare Progetto Trello", status: "progress" },
+      { id: 4, text: "Creare un design per la pagina", status: "progress" },
+      { id: 5, text: "Fissare appuntamento Dottore", status: "done" },
+      { id: 6, text: "Fare abbonamento parcheggio", status: "done" },
+  ]);
+
+  const columns = ["todo", "progress", "done"];
 
   // Funzione per aggiungere un task
-  const addTask = (columnId) => {
+  const addTask = (status) => {
     const text = prompt("Cosa devi fare?");
     if (!text) return;
 
-    const newTask = { id: Date.now(), text: text };
+    const newTask = { id: Date.now(), text: text, status: status };
     
-    setBoard({
-      ...board,
-      [columnId]: [...board[columnId], newTask]
-    });
+    setTasks([...tasks, newTask]);
   };
 
   // Funzione per eliminare un task
-  const deleteTask = (columnId, taskId) => {
-    setBoard({
-      ...board,
-      [columnId]: board[columnId].filter(task => task.id !== taskId)
-    });
+  const deleteTask = (taskId) => {
+    setTasks(tasks.filter(task => task.id !== taskId));
   };
 
-const moveTask = (taskId, fromColumn, toColumn) => {
-  if (fromColumn === toColumn) return;
-
-  const taskToMove = board[fromColumn].find(t => t.id === taskId);
-
-  setBoard({
-    ...board,
-    [fromColumn]: board[fromColumn].filter(t => t.id !== taskId),
-    [toColumn]: [...board[toColumn], taskToMove]
-  });
+  // Funzione per spostare un task
+const moveTask = (taskId, newStatus) => {
+  setTasks(tasks.map(task => task.id === taskId ? {...task, status: newStatus} : task));
 };
 
 
@@ -62,7 +45,13 @@ const moveTask = (taskId, fromColumn, toColumn) => {
     }}
     className="app-container">
       <h1>My Trello Board</h1>
-      <Board board={board} onAdd={addTask} onDelete={deleteTask} onMove={moveTask} />
+      <Board 
+      tasks={tasks}
+      columns={columns}
+      onAdd={addTask}
+      onDelete={deleteTask}
+      onMove={moveTask} 
+      />
     </div>
   );
 }
