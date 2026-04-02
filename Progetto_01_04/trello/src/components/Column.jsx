@@ -1,6 +1,6 @@
 import Card from "./Card";
 
-function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) {
+function Column({ title, tasks, description, onDelete, onMove, allStatuses }) {
   return (
     <div className="column" 
     style={{ 
@@ -33,14 +33,13 @@ function Column({ title, tasks, status, onAdd, onDelete, onMove, allStatuses }) 
       {tasks.map(task => (
         <Card 
           key={task.id} 
-          task={task} 
+          task={task}
+          description={description} 
           onDelete={() => onDelete(task.id)} 
           onMove={onMove}
           allStatuses={allStatuses}
         />
       ))}
-
-      <button style={{marginLeft:"1.3rem",marginTop:"10px"}} className="buttonAdd" onClick={() => onAdd(status)}> + Aggiungi Task</button>
     </div>
   );
 }

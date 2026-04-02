@@ -10,10 +10,12 @@ function Card({ task, onMove, onDelete, allStatuses }) {
 
       <div style={{
          display: "flex",
-        justifyContent: "space-between" 
+         flexDirection:"column"
         }}>
 
-        <span>{task.text}</span>
+        <span style={{fontWeight: "bold", marginBottom: "15px"}}>{task.text}</span>
+
+        <span style={{marginBottom: "15px"}}>{task.description}</span>
 
         <button onClick={onDelete} style={{ background: "red", color: "white" }}>X</button>
       </div>
