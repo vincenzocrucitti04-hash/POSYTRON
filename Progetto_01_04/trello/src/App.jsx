@@ -5,24 +5,26 @@ import Board from './components/Board';
 function App() {
   const [tasks, setTasks] = useState([
       { id: 1, text: "Andare a fare la spesa", description: "Latte,Mandorle,Cereali,Pollo", status: "todo" },
-      { id: 2, text: "Comprare mobile cucina", description: "Deve essere bianco, misure 30x50x20", status: "todo" },
       { id: 3, text: "Sviluppare Progetto Trello", description: "Migliorare l'efficienza dei task, con l'aggiunta di alcune funzionalità diverse", status: "progress" },
-      { id: 4, text: "Creare un design per la pagina", description: "Migliorare il css, per avere un impatto visivo migliore", status: "progress" },
-      { id: 5, text: "Fissare appuntamento Dottore", description: "Devo prenotare le analisi del sangue", status: "done" },
-      { id: 6, text: "Fare abbonamento parcheggio", description: "Trovare abbonamento per Zona B e A", status: "done" },
+      { id: 5, text: "Fissare appuntamento Dottore", description: "Devo prenotare le analisi del sangue", status: "done" }
   ]);
 
+  // Array degli stati
   const columns = ["todo", "progress", "done"];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTaskData, setNewTaskData] = useState({
-  text: "",
-  description: "",
-  status: "todo"
-});
+  const[editingTaskId, setEditingTaskId] = useState(null)
+  const [newTaskData, setNewTaskData] = useState({ text: "", description: "", status: "todo" });
 
-const openModal = (status = "todo") => {
-  setNewTaskData({ text: "", description: "", status: status });
+const openModal = () => {
+  setNewTaskData({ text: "", description: "", status: "todo" });
+  setEditingTaskId(null);
+  setIsModalOpen(true);
+};
+
+const openEditModal = (task) => {
+  setNewTaskData({ text: task.text, description: task.description, status: task.status });
+  setEditingTaskId(task.id);
   setIsModalOpen(true);
 };
 
@@ -35,13 +37,13 @@ const handleSaveTask = () => {
   }
 
   // Validazione Lunghezza Titolo
-  if (text.length > 80 && text.typeof(String)) {
+  if (text.length > 80 && typeof text === "string") {
     alert("Errore: il titolo supera il limite di caratteri consentito (80)");
     return;
   }
 
   // Validazione Lunghezza Descrizione
-  if (description.length > 250 && description.typeof(String)) {
+  if (description.length > 250 && typeof description === "string") {
     alert("Errore: la descrizione supera il limite di caratteri consentito (250)");
     return;
   }
@@ -52,14 +54,21 @@ const handleSaveTask = () => {
     return;
   }
 
+  const now = new Date();
+  const currentDateTime = now.toLocaleDateString('it-IT', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
 
-  const newTask = {
-    ...newTaskData,
-    id: Date.now(),
-  };
+  if (editingTaskId) {
+    // --- MODALITÀ MODIFICA ---
+    setTasks(tasks.map(t => t.id === editingTaskId ? { ...t, ...newTaskData, updatedAt: currentDateTime} : t ));
+  } else { const createdAt = currentDateTime; const newTask = { ...newTaskData, id: Date.now(), createdAt: createdAt }; 
+  setTasks([...tasks, newTask]);
+  }
 
-  setTasks((prevTasks) => [...prevTasks, newTask]);
   setIsModalOpen(false);
+  setEditingTaskId(null);
 };
 
   // Funzione per eliminare un task
@@ -107,46 +116,48 @@ const moveTask = (taskId, newStatus) => {
       columns={columns}
       onDelete={deleteTask}
       onMove={moveTask} 
+      onEdit={openEditModal}
       />
 
-      {isModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <h2>Aggiungi Nuovo Task</h2>
-      
-      <label>Titolo (Max 80)</label>
-      <input 
-        type="text" 
-        value={newTaskData.text}
-        onChange={(e) => setNewTaskData({...newTaskData, text: e.target.value})}
-        placeholder="Cosa devi fare?"
-      />
-      <small>{newTaskData.text.length}/80</small>
+{isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>{editingTaskId ? "Modifica Task" : "Nuovo Task"}</h2>
+            
+            <label>Titolo ({newTaskData.text.length}/80)</label>
+            <input 
+              type="text" 
+              value={newTaskData.text}
+              onChange={(e) => {
+                if (e.target.value.length <= 80) 
+                  setNewTaskData({...newTaskData, text: e.target.value})
+              }}
+            />
 
-      <label>Descrizione (Max 250)</label>
-      <textarea 
-        value={newTaskData.description}
-        maxLength={250}
-        onChange={(e) => setNewTaskData({...newTaskData, description: e.target.value})}
-        placeholder="Aggiungi dettagli..."
-      />
-      <small>{newTaskData.description.length}/250</small>
+            <label>Descrizione ({newTaskData.description.length}/250)</label>
+            <textarea 
+              value={newTaskData.description}
+              onChange={(e) => {
+                if (e.target.value.length <= 250) 
+                  setNewTaskData({...newTaskData, description: e.target.value})
+              }}
+            />
 
-      <label>Stato</label>
-      <select 
-        value={newTaskData.status}
-        onChange={(e) => setNewTaskData({...newTaskData, status: e.target.value})}
-      >
-        {columns.map(col => <option key={col} value={col}>{col}</option>)}
-      </select>
+            <label>Stato</label>
+            <select 
+              value={newTaskData.status}
+              onChange={(e) => setNewTaskData({...newTaskData, status: e.target.value})}
+            >
+              {columns.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
 
-      <div className="modal-buttons" style={{display:"flex", justifyContent:"space-between",alignItems:"center", marginTop:"20px", width:"100%"}}>
-        <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Annulla</button>
-        <button onClick={handleSaveTask} className="save-btn">Salva Task</button>
-      </div>
-    </div>
-  </div>
-)}
+            <div className="modal-actions" style={{display:"flex", justifyContent:"space-between",alignItems:"center", marginTop:"20px", width:"100%"}}>
+              <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Annulla</button>
+              <button onClick={handleSaveTask} className="save-btn">Salva</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
