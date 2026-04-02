@@ -85,3 +85,10 @@ h1 {
   padding: 10px;
   cursor: pointer;
 }
+
+.edit-btn {
+  background: #ffc107;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+}
