@@ -1,13 +1,8 @@
 import Column from "./Column";
 
-function Board({ tasks, columns, description, onDelete, onMove }) {
+function Board({ tasks, columns, description, onDelete, onMove, onEdit }) {
   return (
-    <div style={{ 
-      display: "flex",
-      gap: "20px",
-      justifyContent: "center" 
-      }}>
-        
+    <div className="board" style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
       {columns.map(colStatus => (
         <Column 
           key={colStatus}
@@ -18,6 +13,7 @@ function Board({ tasks, columns, description, onDelete, onMove }) {
           tasks={tasks.filter(t => t.status === colStatus)}
           onDelete={onDelete} 
           onMove={onMove}
+          onEdit={onEdit}
           allStatuses={columns}
         />
       ))}
