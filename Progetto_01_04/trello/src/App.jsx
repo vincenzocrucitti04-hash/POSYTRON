@@ -27,14 +27,38 @@ const openModal = (status = "todo") => {
 };
 
 const handleSaveTask = () => {
-  if (newTaskData.text.trim() === "") return alert("Il titolo è obbligatorio");
+  const { text, description, status } = newTaskData;
+
+  // Validazione Titolo Vuoto
+  if (!text.trim()) {
+    return alert("Il titolo è obbligatorio");
+  }
+
+  // Validazione Lunghezza Titolo
+  if (text.length > 80 && text.typeof(String)) {
+    alert("Errore: il titolo supera il limite di caratteri consentito (80)");
+    return;
+  }
+
+  // Validazione Lunghezza Descrizione
+  if (description.length > 250 && description.typeof(String)) {
+    alert("Errore: la descrizione supera il limite di caratteri consentito (250)");
+    return;
+  }
+
+  // Validazione Status
+  if (!columns.includes(status)) {
+    alert("Errore: Status non valido!");
+    return;
+  }
+
 
   const newTask = {
     ...newTaskData,
     id: Date.now(),
   };
 
-  setTasks([...tasks, newTask]);
+  setTasks((prevTasks) => [...prevTasks, newTask]);
   setIsModalOpen(false);
 };
 
