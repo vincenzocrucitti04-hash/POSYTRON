@@ -92,3 +92,9 @@ h1 {
   cursor: pointer;
   border-radius: 3px;
 }
+
+div,
+select,
+span {
+  font-family: "Manrope", sans-serif;
+}
